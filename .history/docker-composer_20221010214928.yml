@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: monitoria-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run start:dev
+    ports:
+      - 3333:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - redis
+    networks:
+      - customer-network
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: monitoria-redis
+    command: redis-server --requirepass m0n1t0r1@r3d1s
+    ports:
+      - 6680:6379
+    volumes:
+      - monitoria-redis-data:/data
+    networks:
+      - monitoria-network
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: monitoria-redis-commander
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=m0n1t0r1@r3d1s
+    ports:
+      - 8091:8081
+    networks:
+      - monitoria-network
+
+networks:
+  customer-network:
+    name: customer-network
+    driver: bridge
+
+volumes:
+  monitoria-redis-data:
+    name: monitoria-redis-data

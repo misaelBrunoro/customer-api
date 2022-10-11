@@ -1,0 +1,126 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@misaelBrunoro 
+sgm-monitoria
+/
+monitoria-api
+Private
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+monitoria-api/docker-compose.yml
+
+Weslen Teche atualizacoes
+Latest commit 7d4c7e2 on 25 Mar
+ History
+ 2 contributors
+@misaelBrunoro@weslenteche
+98 lines (89 sloc)  2.1 KB
+
+version: '3.7'
+
+services:
+  app:
+    container_name: monitoria-app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: npm run start:dev
+    ports:
+      - 3333:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - redis
+    networks:
+      - monitoria-network
+
+  db:
+    image: postgres:12-alpine
+    container_name: monitoria-db
+    ports:
+      - 5532:5432
+    environment:
+      - POSTGRES_DB=monitoria_db
+      - POSTGRES_USER=monitoria_user
+      - POSTGRES_PASSWORD=m0n1t0r1@
+    volumes:
+      - monitoria-db-data:/var/lib/postgresql/data
+    networks:
+      - monitoria-network
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: monitoria-redis
+    command: redis-server --requirepass m0n1t0r1@r3d1s
+    ports:
+      - 6680:6379
+    volumes:
+      - monitoria-redis-data:/data
+    networks:
+      - monitoria-network
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    container_name: monitoria-elastic
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - monitoria-elastic-data:/usr/share/elasticsearch/data
+    networks:
+      - monitoria-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.1
+    container_name: monitoria-kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elastic:9200
+      - ELASTICSEARCH_HOSTS=http://elastic:9200
+    ports:
+      - 5601:5601
+    networks:
+      - monitoria-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: monitoria-mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025 #web port
+    networks:
+      - monitoria-network
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: monitoria-redis-commander
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=m0n1t0r1@r3d1s
+    ports:
+      - 8091:8081
+    networks:
+      - monitoria-network
+
+networks:
+  monitoria-network:
+    name: monitoria-network
+    driver: bridge
+
+volumes:
+  monitoria-db-data:
+    name: monitoria-db-data
+  monitoria-redis-data:
+    name: monitoria-redis-data
+  monitoria-elastic-data:
+    name: monitoria-elastic-data
