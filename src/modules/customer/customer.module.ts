@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common'
 import { CustomerService } from './customer.service'
 import { CustomerController } from './customer.controller'
+import { RedisCacheModule } from 'src/redis-cache/redis-cache.module'
 
 @Module({
-  imports: [],
+  imports: [RedisCacheModule],
   providers: [CustomerService],
   exports: [CustomerService],
   controllers: [CustomerController],

@@ -21,7 +21,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('/docs', app, document)
 
-  await app.listen(process.env.APP_PORT)
+  await app.listen(process.env.APP_PORT || 3000)
 
   process.on('unhandledRejection', (reason, promise) => {
     console.error(reason)

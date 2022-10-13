@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-$ npm install
+$ make install
 ```
 
 ## Running the app

@@ -1,26 +1,73 @@
-import { InjectRedis } from '@nestjs-modules/ioredis'
 import { CustomerDto } from './dto/customer.dto'
 import { v4 as uuidv4 } from 'uuid'
-import Redis from 'ioredis'
+import { plainToClass } from 'class-transformer'
+import { RedisCacheService } from '../../redis-cache/redis-cache.service'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
+import { UpdateCustomerDto } from './dto/update-customer.dto'
 
-const REDIS_KEY = 'customer:'
+const BASE_KEY = 'customer:'
 
+@Injectable()
 export class CustomerService {
-  constructor(
-    @InjectRedis() private readonly redis: Redis,
-  ) {}
+  constructor(private readonly redisService: RedisCacheService) {}
 
-  async index() {
-    const redisData = await this.redis.get(REDIS_KEY + '*');
-    return { redisData };
+  async index(): Promise<CustomerDto[]> {
+    const customers: CustomerDto[] = []
+    const keys = await this.redisService.keys(BASE_KEY + '*')
+    await Promise.all(
+      keys.map(async (key) => {
+        const data = await this.redisService.get(key)
+        customers.push(plainToClass(CustomerDto, JSON.parse(data)))
+      }),
+    )
+    return customers
   }
 
   async store(customerDto: CustomerDto) {
-    await this.redis.set(uuidv4(), JSON.stringify(customerDto));
+    await this.redisService.set(
+      BASE_KEY + uuidv4(),
+      JSON.stringify(customerDto),
+    )
   }
 
-  async show(id: string) {
-    const redisData = await this.redis.get(REDIS_KEY + id);
-    return { redisData };
+  async show(id: string): Promise<CustomerDto> {
+    const customer = await this.redisService.get(BASE_KEY + id)
+
+    if (!customer) {
+      throw new NotFoundException('cliente inexistente')
+    }
+
+    return plainToClass(CustomerDto, JSON.parse(customer))
+  }
+
+  async put(id: string, customerDto: UpdateCustomerDto) {
+    const customerAlreadyExist = await this.redisService.get(
+      BASE_KEY + customerDto.id,
+    )
+
+    if (customerAlreadyExist) {
+      throw new ConflictException('conflito de ID')
+    }
+
+    const customerToUpdate = await this.redisService.get(BASE_KEY + id)
+
+    if (!customerToUpdate) {
+      throw new NotFoundException('cliente inexistente')
+    }
+    await this.redisService.del(BASE_KEY + id)
+
+    const customer: CustomerDto = {
+      document: customerDto.document,
+      name: customerDto.name,
+    }
+
+    await this.redisService.set(
+      BASE_KEY + customerDto.id,
+      JSON.stringify(customer),
+    )
   }
 }
