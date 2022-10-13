@@ -1,5 +1,5 @@
 import { InjectRedis } from '@nestjs-modules/ioredis'
-import { uuid } from 'uuidv4'
+import { v4 as uuidv4 } from 'uuid'
 import { AuthDto } from './dto/auth.dto'
 import Redis from 'ioredis'
 
@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async store(authDto: AuthDto) {
-    await this.redis.set(uuid(), JSON.stringify(authDto));
+    await this.redis.set(uuidv4(), JSON.stringify(authDto));
   }
 
   async get() {

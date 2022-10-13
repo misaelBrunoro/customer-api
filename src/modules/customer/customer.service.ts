@@ -1,6 +1,6 @@
 import { InjectRedis } from '@nestjs-modules/ioredis'
 import { CustomerDto } from './dto/customer.dto'
-import { uuid } from 'uuidv4'
+import { v4 as uuidv4 } from 'uuid'
 import Redis from 'ioredis'
 
 const REDIS_KEY = 'customer:'
@@ -16,7 +16,7 @@ export class CustomerService {
   }
 
   async store(customerDto: CustomerDto) {
-    await this.redis.set(uuid(), JSON.stringify(customerDto));
+    await this.redis.set(uuidv4(), JSON.stringify(customerDto));
   }
 
   async show(id: string) {

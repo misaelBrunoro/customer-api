@@ -18,7 +18,7 @@ export class CustomerController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   async store(@Body() customerDto: CustomerDto) {
     return this.customerService.store(customerDto)
   }
