@@ -5,8 +5,8 @@ import {
   Inject,
 } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
-import { AuthResponseDto } from './dto/auth-response.dto'
-import { RedisCacheService } from 'src/redis-cache/redis-cache.service'
+import { RedisCacheService } from '../../../redis-cache/redis-cache.service'
+import { AuthResponseDto } from '../dto/auth-response.dto'
 
 const BASE_KEY = 'user-auth'
 

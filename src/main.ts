@@ -8,14 +8,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app.setGlobalPrefix('api')
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
   app.use(helmet())
 
   const swaggerOptions = new DocumentBuilder()
-  .setTitle('customer-api')
-  .setDescription("Customer API")
-  .setVersion('1.0')
-  .build()
+    .setTitle('customer-api')
+    .setDescription('Customer API')
+    .setVersion('1.0')
+    .build()
 
   const document = SwaggerModule.createDocument(app, swaggerOptions)
 

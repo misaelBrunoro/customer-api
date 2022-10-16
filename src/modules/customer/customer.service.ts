@@ -48,13 +48,11 @@ export class CustomerService {
     const customerAlreadyExist = await this.redisService.get(
       BASE_KEY + customerDto.id,
     )
-
     if (customerAlreadyExist) {
       throw new ConflictException('conflito de ID')
     }
 
     const customerToUpdate = await this.redisService.get(BASE_KEY + id)
-
     if (!customerToUpdate) {
       throw new NotFoundException('cliente inexistente')
     }
@@ -64,7 +62,6 @@ export class CustomerService {
       document: customerDto.document,
       name: customerDto.name,
     }
-
     await this.redisService.set(
       BASE_KEY + customerDto.id,
       JSON.stringify(customer),
