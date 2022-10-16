@@ -21,13 +21,13 @@ export class CustomerController {
 
   @Get()
   @UseGuards(AuthGuard)
-  async index() {
+  async index(): Promise<CustomerDto[]> {
     return this.customerService.index()
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  async store(@Body() customerDto: CustomerDto) {
+  async store(@Body() customerDto: CustomerDto): Promise<void> {
     return this.customerService.store(customerDto)
   }
 
@@ -44,7 +44,7 @@ export class CustomerController {
   async put(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() customerDto: UpdateCustomerDto,
-  ) {
-    this.customerService.put(id, customerDto)
+  ): Promise<CustomerDto> {
+    return this.customerService.put(id, customerDto)
   }
 }
