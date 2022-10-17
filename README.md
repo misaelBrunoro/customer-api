@@ -2,27 +2,46 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+An API for customers registration
+
 ## Installation
+
+**_Linux_**
 
 ```bash
 $ make install
 ```
 
+**Windows**
+
+```bash
+$ npm install
+```
+
 ## Running the app
+
+**_Linux_**
 
 ```bash
 $ make
 ```
 
-## Test
+**Windows**
 
 ```bash
-# unit tests
-$ npm run test
+$ docker compose up
+```
 
-# e2e tests
-$ npm run test:e2e
+## Test
 
-# test coverage
-$ npm run test:cov
+**_Linux_**
+
+```bash
+$ make tests
+```
+
+**Windows**
+
+```bash
+$ npm test
 ```

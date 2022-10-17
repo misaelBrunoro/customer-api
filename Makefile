@@ -4,5 +4,5 @@ run:
 install:
 	@npm install
 
-test:
+tests:
 	@npm test
