@@ -30,6 +30,10 @@ describe('Customers', () => {
     await app.init()
   })
 
+  it(`/GET customers`, () => {
+   
+  })
+
   /*it(`/GET customers`, () => {
     return request(app.getHttpServer())
       .get('/customers')
