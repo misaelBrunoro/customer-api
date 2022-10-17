@@ -1,9 +1,10 @@
 import { InjectRedis } from '@nestjs-modules/ioredis'
 import { BadGatewayException, Injectable } from '@nestjs/common'
 import Redis from 'ioredis'
+import { RedisCacheInterface } from './redis-cache.interface'
 
 @Injectable()
-export class RedisCacheService {
+export class RedisCacheService implements RedisCacheInterface {
   constructor(@InjectRedis() private readonly redis: Redis) {}
 
   async keys(key: string): Promise<any> {
