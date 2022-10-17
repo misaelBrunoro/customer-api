@@ -30,6 +30,10 @@ $ make
 $ docker compose up
 ```
 
+## Docs
+
+http://localhost:3333/docs
+
 ## Test
 
 **_Linux_**
