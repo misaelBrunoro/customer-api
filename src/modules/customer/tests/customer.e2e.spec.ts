@@ -30,33 +30,33 @@ describe('Customers', () => {
     await app.init()
   })
 
-  it(`/GET customers`, () => {
-    /*return request(app.getHttpServer())
+  /*it(`/GET customers`, () => {
+    return request(app.getHttpServer())
       .get('/customers')
       .expect(200)
-      .expect(customerService.index())*/
+      .expect(customerService.index())
   })
 
   it(`/POST customers`, () => {
-    /*return request(app.getHttpServer())
+    return request(app.getHttpServer())
       .post('/customers')
       .expect(200)
-      .expect(customerService.store())*/
+      .expect(customerService.store())
   })
 
   it(`/GET customers`, () => {
-    /*return request(app.getHttpServer())
+    return request(app.getHttpServer())
       .get('/customers/1')
       .expect(200)
-      .expect(customerService.show())*/
+      .expect(customerService.show())
   })
 
   it(`/PUT customers/1`, () => {
-    /*return request(app.getHttpServer())
+    return request(app.getHttpServer())
       .put('/customers')
       .expect(200)
-      .expect(customerService.put())*/
-  })
+      .expect(customerService.put())
+  })*/
 
   afterAll(async () => {
     await app.close()

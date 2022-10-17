@@ -43,9 +43,9 @@ describe('AuthService', () => {
     expect(authController).toBeDefined()
   })
 
-  describe('service', () => {
+  /*describe('service', () => {
     it('should do login service', async () => {})
-  });
+  });*/
 
   describe('controller', () => {
     it('should get error in username', async () => {

@@ -42,7 +42,7 @@ describe('CustomerServce', () => {
     expect(customerController).toBeDefined()
   })
 
-  describe('service', () => {
+  /*describe('service', () => {
     it('should get all', async () => {
       
     })
@@ -58,7 +58,7 @@ describe('CustomerServce', () => {
     it('should put', async () => {
       
     })
-  })
+  })*/
 
   describe('controller', () => { 
     it('should get error in document', async () => {
