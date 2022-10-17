@@ -1,26 +1,30 @@
-import * as request from 'supertest';
-import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { customer } from './mocks';
-import { CustomerService } from '../customer.service';
-import { CustomerModule } from '../customer.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisCacheModule } from '../../../redis-cache/redis-cache.module';
+import * as request from 'supertest'
+import { Test } from '@nestjs/testing'
+import { INestApplication } from '@nestjs/common'
+import { customer } from './mocks'
+import { CustomerService } from '../customer.service'
+import { CustomerModule } from '../customer.module'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 describe('Customers', () => {
-  let app: INestApplication;
-  let customerService = { store: () => customer, index: () => [customer], put: () => customer, show: () => customer };
+  let app: INestApplication
+  let customerService = {
+    store: () => customer,
+    index: () => [customer],
+    put: () => customer,
+    show: () => customer,
+  }
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-          ConfigModule.forRoot({
-            isGlobal: true,
-            expandVariables: true,
-          }),
-          CustomerModule,
-        ],
-        providers: [ConfigService]
+        ConfigModule.forRoot({
+          isGlobal: true,
+          expandVariables: true,
+        }),
+        CustomerModule,
+      ],
+      providers: [ConfigService],
     })
       .overrideProvider(CustomerService)
       .useValue(customerService)
@@ -30,9 +34,7 @@ describe('Customers', () => {
     await app.init()
   })
 
-  it(`/GET customers`, () => {
-   
-  })
+  it(`/GET customers`, () => {})
 
   /*it(`/GET customers`, () => {
     return request(app.getHttpServer())

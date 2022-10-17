@@ -8,6 +8,7 @@ import { AuthDto } from '../dto/auth.dto'
 import { validate } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
 import { authResponse } from './mocks'
+import { of } from 'rxjs'
 
 describe('AuthService', () => {
   let authService: AuthService
@@ -28,7 +29,7 @@ describe('AuthService', () => {
     }).compile()
 
     authService = moduleRef.get<AuthService>(AuthService)
-    authController = new AuthController(authService);
+    authController = new AuthController(authService)
   })
 
   afterEach(async () => {
@@ -43,44 +44,56 @@ describe('AuthService', () => {
     expect(authController).toBeDefined()
   })
 
-  /*describe('service', () => {
-    it('should do login service', async () => {})
-  });*/
+  describe('service', () => {
+    it('should do login service', async () => {
+      jest
+        .spyOn(authService, 'login')
+        .mockReturnValue(of(Promise.resolve(authResponse)))
+
+      const auth: AuthDto = {
+        username: '123',
+        password: '123',
+      }
+
+      expect(await authService.doLogin(auth)).toBe(authResponse)
+    })
+  })
 
   describe('controller', () => {
     it('should get error in username', async () => {
       const auth: AuthDto = {
         username: '',
-        password: '123'
+        password: '123',
       }
       const myDtoObject = plainToInstance(AuthDto, auth)
       const errors = await validate(myDtoObject)
       const stringErrors = JSON.stringify(errors)
       expect(stringErrors.length).not.toBe(0)
       expect(stringErrors).toContain('username should not be empty')
-    });
+    })
 
     it('should get error in password', async () => {
       const auth: AuthDto = {
         username: '123',
-        password: ''
+        password: '',
       }
       const myDtoObject = plainToInstance(AuthDto, auth)
       const errors = await validate(myDtoObject)
       const stringErrors = JSON.stringify(errors)
       expect(stringErrors.length).not.toBe(0)
       expect(stringErrors).toContain('password should not be empty')
-    });
+    })
 
     it('should return AuthResponseDto', async () => {
-     
-      jest.spyOn(authService, 'doLogin').mockImplementation(() => Promise.resolve(authResponse))
+      jest
+        .spyOn(authService, 'doLogin')
+        .mockImplementation(() => Promise.resolve(authResponse))
 
       const auth: AuthDto = {
         username: 'test',
-        password: 'test'
+        password: 'test',
       }
       expect(await authController.store(auth)).toBe(authResponse)
-    });
-  });
+    })
+  })
 })
